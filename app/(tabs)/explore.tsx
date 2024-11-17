@@ -1,11 +1,30 @@
-import { Image, StyleSheet } from 'react-native';
+import { Button, Image, StyleSheet } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import Section from '@/components/ui/section/Section';
 import Spacing from '@/components/ui/spacing/Spacing';
+import { useEffect, useState } from 'react';
+import { fetch } from 'expo/fetch';
+import { ProductOutDto } from '@/types/api';
 
 export default function TabTwoScreen() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [products, setProducts] = useState<ProductOutDto[]>([]);
+
+    useEffect(() => {
+        fetch('https://silverland.fun/api/v1/public/product/category/ranks')
+            .then((result) => result.json())
+            .then((value: ProductOutDto[]) => {
+                setProducts(value);
+                setIsLoading(false);
+            });
+    }, []);
+
+    if (isLoading) {
+        return <ThemedText>Загружаем информацию о продуктах...</ThemedText>;
+    }
+
     return (
         <ParallaxScrollView
             headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -21,7 +40,30 @@ export default function TabTwoScreen() {
 
                 <Spacing />
 
-                <ThemedText>Скоро здесь что-нибудь обязательно появится!</ThemedText>
+                <ThemedView style={styles.cards}>
+                    {products.map(({ id, name, imagePath, priceWithoutDiscount }) => (
+                        <ThemedView key={id} style={styles.card}>
+                            <Image
+                                source={{ uri: `https://silverland.fun/public/files/${imagePath}` }}
+                                style={styles.background}
+                            />
+
+                            <ThemedText type={'defaultSemiBold'} style={{ textAlign: 'center' }}>
+                                {name}
+                            </ThemedText>
+
+                            <Spacing />
+
+                            <ThemedText style={{ textAlign: 'center' }}>{priceWithoutDiscount} руб.</ThemedText>
+
+                            <Spacing />
+
+                            <Button title={'Купить'} color={'green'} />
+                        </ThemedView>
+                    ))}
+                </ThemedView>
+
+                <Spacing height={30} />
             </Section>
         </ParallaxScrollView>
     );
@@ -39,5 +81,14 @@ const styles = StyleSheet.create({
         left: 0,
         top: 0,
         position: 'absolute'
+    },
+    cards: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10
+    },
+    card: {
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1)',
+        padding: 10
     }
 });

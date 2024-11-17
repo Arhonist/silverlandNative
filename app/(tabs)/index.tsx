@@ -25,11 +25,11 @@ export default function HomeScreen() {
                 </ThemedView>
 
                 <Spacing />
-
-                <ThemedView style={styles.stepContainer}>
-                    <OnlineBlock />
-                </ThemedView>
             </Section>
+
+            <ThemedView style={styles.stepContainer}>
+                <OnlineBlock />
+            </ThemedView>
 
             <WelcomingTextBlock />
         </ParallaxScrollView>
