@@ -43,10 +43,7 @@ export default function TabTwoScreen() {
                 <ThemedView style={styles.cards}>
                     {products.map(({ id, name, imagePath, priceWithoutDiscount }) => (
                         <ThemedView key={id} style={styles.card}>
-                            <Image
-                                source={{ uri: `https://silverland.fun/public/files/${imagePath}` }}
-                                style={styles.background}
-                            />
+                            <Image source={{ uri: `https://silverland.fun${imagePath}` }} style={styles.cardImage} />
 
                             <ThemedText type={'defaultSemiBold'} style={{ textAlign: 'center' }}>
                                 {name}
@@ -90,5 +87,9 @@ const styles = StyleSheet.create({
     card: {
         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1)',
         padding: 10
+    },
+    cardImage: {
+        width: '100%',
+        height: 450
     }
 });
